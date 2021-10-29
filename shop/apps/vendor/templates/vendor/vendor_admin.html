@@ -5,5 +5,8 @@ Vendor Admin
 {% endblock %}
 
 {% block content %}
-<h1>Vendor Admin - {{ vendor.name }}</h1>
+<div class="box">
+  <h1>Vendor Admin - {{ vendor.name }}</h1>
+    <a href="{% url 'logout' %}" class="button is-danger is-uppercase">Log Out</a>
+</div>
 {% endblock %}
