@@ -47,7 +47,7 @@ class Product(models.Model):
 
                 return self.thumbnail.url
             else:
-                return 'https://via.placeholder.com/240x180.jpg'
+                return '/media/noimage.png'
     
     # Generate's thumbnail image based on uploaded image
     def make_thumbnail(self, image, size=(300, 200)):
