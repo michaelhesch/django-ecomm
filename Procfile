@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath shop.wsgi
+web: gunicorn --pythonpath shop shop.wsgi
