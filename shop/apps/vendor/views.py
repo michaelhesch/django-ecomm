@@ -32,8 +32,22 @@ def become_vendor(request):
 def vendor_admin(request):
     vendor = request.user.vendor
     products = vendor.products.all()
+    orders = vendor.orders.all()
 
-    return render(request, 'vendor/vendor_admin.html', {'vendor': vendor, 'products': products,})
+    for order in orders:
+        order.vendor_amount = 0
+        order.vendor_paid_amount = 0
+        order.fully_paid = True
+    
+        for item in order.items.all():
+            if item.vendor == request.user.vendor:
+                if item.vendor_paid:
+                    order.vendor_paid_amount += item.get_total_price()
+                else:
+                    order.vendor_amount += item.get_total_price()
+                    order.fully_paid = False
+
+    return render(request, 'vendor/vendor_admin.html', {'vendor': vendor, 'products': products, 'orders': orders})
 
 
 @login_required
@@ -52,3 +66,23 @@ def add_product(request):
         form = ProductForm()
 
     return render(request, 'vendor/add_product.html', {'form': form})
+
+
+@login_required
+def edit_vendor(request):
+    vendor = request.user.vendor
+
+    if request.method == 'POST':
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+
+        if name:
+            vendor.created_by.email = email
+            vendor.created_by.save()
+            
+            vendor.name = name
+            vendor.save()
+
+            return redirect('vendor_admin')
+    
+    return render(request, 'vendor/edit_vendor.html', {'vendor': vendor})

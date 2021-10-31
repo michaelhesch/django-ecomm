@@ -35,3 +35,6 @@ class OrderItem(models.Model):
     # if this is returned as default object
     def __str__(self):
         return '%s' % self.id
+
+    def get_total_price(self):
+        return self.price * self.quantity
