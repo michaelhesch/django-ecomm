@@ -9,24 +9,29 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#(enbksp&-x=$=s*ettjeezj9%j1k)1!gs6_4+-+yojr=ed7am'
+SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'DEVELOPMENT' in os.environ
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mh-django-ecomm.herokuapp.com/', 'localhost', '127.0.0.1']
 
+# Stripe config vars
+STRIPE_PUB_KEY = os.environ.get('STRIPE_PUB_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+
+# Login routing settings
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'vendor_admin'
 LOGOUT_REDIRECT_URL = 'frontpage'
@@ -34,6 +39,16 @@ LOGOUT_REDIRECT_URL = 'frontpage'
 # One day in seconds, length oftime before cart is purged
 SESSION_COOKIE_AGE = 86400
 CART_SESSION_ID = 'cart'
+
+# Email config
+"""
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '#'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_EMAIL_FROM = 'Django E-Commerce Store <noreply@test.com>'
+"""
 
 # Application definition
 
@@ -48,6 +63,7 @@ INSTALLED_APPS = [
     'apps.vendor',
     'apps.product',
     'apps.cart',
+    'apps.order',
 ]
 
 MIDDLEWARE = [
@@ -86,11 +102,16 @@ WSGI_APPLICATION = 'shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
+else:  
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
 }
 
 
