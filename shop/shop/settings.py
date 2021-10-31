@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEVELOPMENT' in os.environ
 
-ALLOWED_HOSTS = ['mh-django-ecomm.herokuapp.com/', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['mh-django-ecomm.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Stripe config vars
 STRIPE_PUB_KEY = os.environ.get('STRIPE_PUB_KEY')
