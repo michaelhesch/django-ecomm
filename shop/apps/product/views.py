@@ -20,6 +20,10 @@ def search(request):
 def product(request, category_slug, product_slug):
     cart = Cart(request)
     product = get_object_or_404(Product, category__slug=category_slug, slug=product_slug)
+    imagesstring = '{"thumbnail": "%s", "image": "%s", "id": "mainImage"},' % (product.get_thumbnail(), product.image.url)
+
+    for image in product.images.all():
+        imagesstring += ('{"thumbnail": "%s", "image": "%s", "id": "%s"},' % (image.get_thumbnail(), image.image.url, image.id))
 
     if request.method == 'POST':
         form = AddToCartForm(request.POST)
@@ -39,8 +43,15 @@ def product(request, category_slug, product_slug):
 
     if len(similar_product) >= 4:
         similar_product = random.sample(similar_product, 4)
+
+    context = {
+        'form': form,
+        'product': product,
+        'similar_product': similar_product,
+        'imagesstring': "[" + imagesstring.rstrip(',') + "]",
+    }
     
-    return render(request, 'product/product.html', {'form': form, 'product': product, 'similar_product': similar_product})
+    return render(request, 'product/product.html', context)
 
 
 def category(request, category_slug):
