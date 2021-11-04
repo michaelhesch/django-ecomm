@@ -1,9 +1,9 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Add a Product {% endblock %}
+{% block title %}Edit Product {% endblock %}
 
 {% block content %}
-<h1>Add Product</h1>
+<h1>Edit Product</h1>
 
 <form method="POST" action="" enctype="multipart/form-data">
   {% csrf_token %}
@@ -11,7 +11,7 @@
 
   <div class="field">
     <div class="control">
-      <button class="button is-dark is-uppercase">Submit</button>
+      <button class="button is-dark is-uppercase">Save Changes</button>
     </div>
   </div>
 </form>
